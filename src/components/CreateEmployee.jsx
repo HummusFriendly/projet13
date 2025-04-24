@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import Modal from './Modal';
+import Modal from '@hummusfriendly/react-modal';
+import CustomSelect from './CustomSelect';
 import { addEmployee } from '../store/employeeSlice';
 import { states } from '../data/states';
 
@@ -33,144 +34,154 @@ const CreateEmployee = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addEmployee({ ...formData }));
+    const serializedFormData = {
+      ...formData,
+      dateOfBirth: formData.dateOfBirth ? formData.dateOfBirth.toISOString() : null,
+      startDate: formData.startDate ? formData.startDate.toISOString() : null,
+    };
+    dispatch(addEmployee(serializedFormData));
     setIsModalOpen(true);
   };
 
+  const stateOptions = states.map((state) => ({
+    value: state.abbreviation,
+    label: state.name,
+  }));
+
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-6">HRnet</h1>
-      <Link to="/employees" className="text-blue-500 hover:underline mb-4 block">
-        Voir les employés actuels
+    <div className="container mx-auto p-6 max-w-4xl">
+      <h1 className="text-4xl text-center mb-8 text-gray-800">HRnet</h1>
+      <Link to="/employees" className="text-blue-500 hover:text-blue-700 mb-6 block text-lg font-semibold">
+        View Current Employees
       </Link>
-      <h2 className="text-2xl font-semibold mb-4">Créer un employé</h2>
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto">
-        <div>
-          <label htmlFor="firstName" className="block mb-1">Prénom</label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="lastName" className="block mb-1">Nom</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="dateOfBirth" className="block mb-1">Date de naissance</label>
-          <DatePicker
-            selected={formData.dateOfBirth}
-            onChange={(date) => handleDateChange('dateOfBirth', date)}
-            className="w-full border rounded px-3 py-2"
-            dateFormat="MM/dd/yyyy"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="startDate" className="block mb-1">Date de début</label>
-          <DatePicker
-            selected={formData.startDate}
-            onChange={(date) => handleDateChange('startDate', date)}
-            className="w-full border rounded px-3 py-2"
-            dateFormat="MM/dd/yyyy"
-            required
-          />
-        </div>
-        <fieldset className="border p-4 rounded">
-          <legend className="text-lg font-medium">Adresse</legend>
+      <h2 className="text-2xl mb-6 text-center text-gray-800">Create Employee</h2>
+      <form onSubmit={handleSubmit} className="bg-off-white p-8 rounded-xl shadow-lg space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="street" className="block mb-1">Rue</label>
+            <label htmlFor="firstName" className="block mb-1 font-medium text-gray-800">First Name</label>
             <input
               type="text"
-              id="street"
-              name="street"
-              value={formData.street}
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
               onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
+              className="w-full bg-white"
               required
             />
           </div>
           <div>
-            <label htmlFor="city" className="block mb-1">Ville</label>
+            <label htmlFor="lastName" className="block mb-1 font-medium text-gray-800">Last Name</label>
             <input
               type="text"
-              id="city"
-              name="city"
-              value={formData.city}
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
               onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
+              className="w-full bg-white"
+              required
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="dateOfBirth" className="block mb-1 font-medium text-gray-800">Date of Birth</label>
+            <DatePicker
+              selected={formData.dateOfBirth}
+              onChange={(date) => handleDateChange('dateOfBirth', date)}
+              className="w-full bg-white"
+              dateFormat="MM/dd/yyyy"
               required
             />
           </div>
           <div>
-            <label htmlFor="state" className="block mb-1">État</label>
-            <select
-              id="state"
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
-              required
-            >
-              {states.map((state) => (
-                <option key={state.abbreviation} value={state.abbreviation}>
-                  {state.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="zipCode" className="block mb-1">Code postal</label>
-            <input
-              type="number"
-              id="zipCode"
-              name="zipCode"
-              value={formData.zipCode}
-              onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
+            <label htmlFor="startDate" className="block mb-1 font-medium text-gray-800">Start Date</label>
+            <DatePicker
+              selected={formData.startDate}
+              onChange={(date) => handleDateChange('startDate', date)}
+              className="w-full bg-white"
+              dateFormat="MM/dd/yyyy"
               required
             />
+          </div>
+        </div>
+        <fieldset className="bg-white p-6 rounded-lg shadow-md">
+          <legend className="text-xl font-semibold text-gray-800">Address</legend>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="street" className="block mb-1 font-medium text-gray-800">Street</label>
+              <input
+                type="text"
+                id="street"
+                name="street"
+                value={formData.street}
+                onChange={handleChange}
+                className="w-full"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="city" className="block mb-1 font-medium text-gray-800">City</label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                className="w-full"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="state" className="block mb-1 font-medium text-gray-800">State</label>
+              <CustomSelect
+                id="state"
+                name="state"
+                value={formData.state}
+                options={stateOptions}
+                onChange={handleChange}
+                placeholder="Select a state"
+              />
+            </div>
+            <div>
+              <label htmlFor="zipCode" className="block mb-1 font-medium text-gray-800">Zip Code</label>
+              <input
+                type="number"
+                id="zipCode"
+                name="zipCode"
+                value={formData.zipCode}
+                onChange={handleChange}
+                className="w-full"
+                required
+              />
+            </div>
           </div>
         </fieldset>
         <div>
-          <label htmlFor="department" className="block mb-1">Département</label>
+          <label htmlFor="department" className="block mb-1 font-medium text-gray-800">Department</label>
           <select
             id="department"
             name="department"
             value={formData.department}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
+            className="w-full bg-white"
             required
           >
-            <option>Ventes</option>
+            <option>Sales</option>
             <option>Marketing</option>
-            <option>Ingénierie</option>
-            <option>Ressources humaines</option>
-            <option>Juridique</option>
+            <option>Engineering</option>
+            <option>Human Resources</option>
+            <option>Legal</option>
           </select>
         </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="bg-accent-gold text-white px-6 py-3 rounded-lg shadow-md hover:bg-emerald-green w-full"
         >
-          Enregistrer
+          Save
         </button>
       </form>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <p>Employé créé !</p>
+        <p className="text-lg text-gray-800">Employé créé</p>
       </Modal>
     </div>
   );
