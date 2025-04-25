@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Modal from '@hummusfriendly/react-modal';
-import CustomSelect from './CustomSelect';
+import SearchSelect from './SearchSelect';
 import { addEmployee } from '../store/employeeSlice';
 import { states } from '../data/states';
 
@@ -133,7 +133,7 @@ const CreateEmployee = () => {
             </div>
             <div>
               <label htmlFor="state" className="block mb-1 font-medium text-gray-800">State</label>
-              <CustomSelect
+              <SearchSelect
                 id="state"
                 name="state"
                 value={formData.state}

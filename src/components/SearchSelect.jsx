@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-const CustomSelect = ({ id, name, value, options, onChange, placeholder }) => {
+const SearchSelect = ({ id, name, value, options, onChange, placeholder }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const wrapperRef = useRef(null);
@@ -30,9 +30,6 @@ const CustomSelect = ({ id, name, value, options, onChange, placeholder }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  console.log('Options:', options);
-  console.log('Filtered options:', filteredOptions);
 
   return (
     <div className="relative" ref={wrapperRef}>
@@ -98,7 +95,7 @@ const CustomSelect = ({ id, name, value, options, onChange, placeholder }) => {
   );
 };
 
-CustomSelect.propTypes = {
+SearchSelect.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
@@ -112,4 +109,4 @@ CustomSelect.propTypes = {
   placeholder: PropTypes.string,
 };
 
-export default CustomSelect;
+export default SearchSelect;
